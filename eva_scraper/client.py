@@ -57,7 +57,8 @@ class EvaClient:
 
         access_token = payload["data"]["login"]["accessToken"]
         refresh_cookie = self.session.cookies.get(REFRESH_COOKIE_NAME, domain=REFRESH_COOKIE_DOMAIN)
-        self.token_store.update(access_token=access_token, refresh_cookie=refresh_cookie)
+        user_id = payload["data"]["login"]["user"]["id"]
+        self.token_store.update(access_token=access_token, refresh_cookie=refresh_cookie, user_id=user_id)
         self.session.headers["authorization"] = f"Bearer {access_token}"
         return payload["data"]["login"]
 

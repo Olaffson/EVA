@@ -4,6 +4,7 @@ import getpass
 from . import config
 from .client import EvaClient
 from .db import get_connection
+from .scraper import scrape_last_matches
 
 
 def cmd_login(args):
@@ -27,12 +28,13 @@ def cmd_scrape(args):
     client = EvaClient()
     if not client.token_store.access_token:
         raise SystemExit("No stored access token. Run `login` first.")
-    get_connection()
-    print(
-        "TODO: player stats GraphQL query not captured yet. "
-        "Capture it from a profile page on app.eva.gg and wire it into "
-        "eva_scraper/queries.py + a new scraper function."
-    )
+    user_id = args.user_id or client.token_store.user_id
+    if not user_id:
+        raise SystemExit("No user id known. Pass --user-id or run `login` again.")
+
+    conn = get_connection()
+    count = scrape_last_matches(client, conn, user_id=user_id, season_id=args.season_id)
+    print(f"Stored {count} matches for user {user_id}, season {args.season_id}")
 
 
 def main():
@@ -49,7 +51,8 @@ def main():
     refresh_parser.set_defaults(func=cmd_refresh)
 
     scrape_parser = sub.add_parser("scrape", help="Scrape player stats")
-    scrape_parser.add_argument("usernames", nargs="+")
+    scrape_parser.add_argument("--user-id", type=int, help="Defaults to the user id stored at login")
+    scrape_parser.add_argument("--season-id", type=int, required=True)
     scrape_parser.set_defaults(func=cmd_scrape)
 
     args = parser.parse_args()

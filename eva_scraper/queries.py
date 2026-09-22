@@ -82,3 +82,40 @@ mutation refreshToken {
   }
 }
 """
+
+DASHBOARD_LAST_MATCHES_QUERY = """
+query DashboardLastMatches($userId: Int!, $seasonId: Int!) {
+  listLastAfterhGameHistoriesByUserAndSeason(
+    userId: $userId
+    seasonId: $seasonId
+    game: BattleArena
+  ) {
+    id
+    createdAt
+    mode {
+      id
+      identifier
+      __typename
+    }
+    players {
+      id
+      userId
+      isMvp
+      data {
+        outcome
+        kills
+        deaths
+        assists
+        __typename
+      }
+      __typename
+    }
+    map {
+      id
+      name
+      __typename
+    }
+    __typename
+  }
+}
+"""

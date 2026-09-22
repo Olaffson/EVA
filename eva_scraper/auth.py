@@ -32,11 +32,23 @@ class TokenStore:
     def refresh_cookie(self) -> Optional[str]:
         return self.load().get("keycloak_refresh_token")
 
-    def update(self, *, access_token: Optional[str] = None, refresh_cookie: Optional[str] = None) -> None:
+    @property
+    def user_id(self) -> Optional[int]:
+        return self.load().get("user_id")
+
+    def update(
+        self,
+        *,
+        access_token: Optional[str] = None,
+        refresh_cookie: Optional[str] = None,
+        user_id: Optional[int] = None,
+    ) -> None:
         data = self.load()
         if access_token is not None:
             data["access_token"] = access_token
         if refresh_cookie is not None:
             data["keycloak_refresh_token"] = refresh_cookie
+        if user_id is not None:
+            data["user_id"] = user_id
         data["updated_at"] = time.time()
         self.save(data)
