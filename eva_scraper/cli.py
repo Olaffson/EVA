@@ -17,6 +17,12 @@ def cmd_login(args):
     print(f"Logged in as {user['username']} (id={user['id']})")
 
 
+def cmd_refresh(args):
+    client = EvaClient()
+    access_token = client.refresh()
+    print(f"New access token stored ({access_token[:20]}...)")
+
+
 def cmd_scrape(args):
     client = EvaClient()
     if not client.token_store.access_token:
@@ -38,6 +44,9 @@ def main():
     login_parser.add_argument("--password")
     login_parser.add_argument("--recaptcha-token")
     login_parser.set_defaults(func=cmd_login)
+
+    refresh_parser = sub.add_parser("refresh", help="Renew the access token from the stored refresh cookie")
+    refresh_parser.set_defaults(func=cmd_refresh)
 
     scrape_parser = sub.add_parser("scrape", help="Scrape player stats")
     scrape_parser.add_argument("usernames", nargs="+")

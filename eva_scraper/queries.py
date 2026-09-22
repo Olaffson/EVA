@@ -73,3 +73,12 @@ fragment AuthorizationFields on Authorization {
   __typename
 }
 """
+
+REFRESH_TOKEN_MUTATION = """
+mutation refreshToken {
+  refreshToken {
+    accessToken
+    __typename
+  }
+}
+"""
