@@ -22,6 +22,12 @@ class EvaClient:
                 "content-type": "application/json",
                 "origin": config.EVA_APP_ORIGIN,
                 "referer": config.EVA_APP_ORIGIN + "/",
+                "user-agent": (
+                    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+                    "(KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36"
+                ),
+                "eva-client-app-name": "spa-app",
+                "eva-client-app-commit": config.EVA_CLIENT_APP_COMMIT,
             }
         )
         self.token_store = token_store or TokenStore()
